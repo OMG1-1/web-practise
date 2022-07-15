@@ -33,7 +33,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.26</version>
+            <version>8.0.28</version>
         </dependency>
 
         <dependency>
@@ -73,7 +73,7 @@
         <dependency><!--Spring IOC-->
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.0.2.RELEASE</version>
+            <version>5.2.20.RELEASE</version>
         </dependency>
         <!-- joda-time -->
         <dependency>
