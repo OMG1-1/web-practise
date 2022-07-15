@@ -54,4 +54,13 @@ public interface EmpMapper {
      */
     @Update("update emp set name=#{name},age=#{age},job=#{job},salary=#{salary},entrydate=#{entryDate},manage_id=#{manageId},dept_id=#{deptId} where id=#{id}")
     void updateById(Emp byId);
+
+    /**
+     * 根据id修改Emp表中数据
+     *
+     * @param id emp表中id
+     * @return 删除记录数
+     */
+    @Delete("delete from emp where id = ${id}")
+    int deleteById(int id);
 }

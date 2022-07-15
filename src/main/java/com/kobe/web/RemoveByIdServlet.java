@@ -7,12 +7,12 @@ package com.kobe.web; /**
  * @Note ……
  */
 
-import com.kobe.pojo.Emp;
 import com.kobe.service.impl.EmpServiceImpl;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class RemoveByIdServlet extends HttpServlet {
@@ -21,7 +21,9 @@ public class RemoveByIdServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String result = service.deleteById(Integer.parseInt(request.getParameter("id")));
-
+        request.setAttribute("result", result);
+        System.out.println(result);
+        request.getRequestDispatcher("/resultEmpOptional.jsp").forward(request, response);
     }
 
     @Override

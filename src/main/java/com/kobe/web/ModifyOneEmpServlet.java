@@ -45,7 +45,6 @@ public class ModifyOneEmpServlet extends HttpServlet {
         String s = service.updateById(byId);
         request.setAttribute("result", s);
         System.out.println(s);
-        System.out.println(s);
         request.getRequestDispatcher("/resultEmpOptional.jsp").forward(request, response);
     }
 }

@@ -69,4 +69,18 @@ public class EmpServiceImpl implements EmpService {
             return "this id not found, failed!";
         }
     }
+
+    @Override
+    public String deleteById(int id) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
+        if (mapper.deleteById(id) != 0) {
+            sqlSession.commit();
+            sqlSession.close();
+            return "success";
+        } else {
+            sqlSession.close();
+            return "this id not found, nothing optional!";
+        }
+    }
 }
