@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+@WebServlet("/listEmpAxios")
 
 public class AddEmpServlet extends HttpServlet {
     EmpServiceImpl service = new EmpServiceImpl();
@@ -48,7 +49,7 @@ public class AddEmpServlet extends HttpServlet {
         String s = service.addOne(emp);
         request.setAttribute("result", s);
         System.out.println(s);
-        request.getRequestDispatcher("/resultEmpOptional.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/resultEmpOptional.jsp").forward(request, response);
 
     }
 }

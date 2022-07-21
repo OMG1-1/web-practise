@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AxiosUtilsAdd</title>
+    <style type="text/css">
+        span{
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="post">
+        <label>name:</label><span></span>
+        <input name="name" id="name">
+        <br>
+        <label>age:</label><span></span>
+        <input name="age" id="age">
+        <br>
+        <label>job:</label><span></span>
+        <input name="job" id="job">
+        <br>
+        <label>salary:</label><span></span>
+        <input name="salary" id="salary">
+        <br>
+        <label>entryDate:</label><span></span>
+        <input type="date" name="entryDate" id="entryDate"/>
+        <br>
+        <label>manageId:</label><span></span>
+        <input name="manageId" id="manageId">
+        <br>
+        <label>deptId:</label><span></span>
+        <input name="deptId" id="deptId">
+        <br>
+        <button id="submit">commit</button>
+        <span></span>
+        <button type="reset">reset</button>
+    </form>
+    <br/>
+    <hr/>
+    <span id="msg_result" style="display: none">添加成功!</span>
+    <script src="../js/axios.min.js"></script>
+    <script>
+        var formData={
+            name:"",
+            age:"",
+            job:"",
+            salary:"",
+            entryDate:"",
+            manageId:"",
+            deptId:""
+        };
+        // 获取用户输入数据
+        formData.name = document.getElementById("name").value;
+        formData.age = document.getElementById("age").value;
+        formData.job = document.getElementById("job").value;
+        formData.salary = document.getElementById("salary").value;
+        formData.entryDate = document.getElementById("entryDate").value;
+        formData.manageId = document.getElementById("manageId").value;
+        formData.deptId = document.getElementById("deptId").value;
+
+        // 提交表单事件触发条件
+        document.getElementById("submit").onclick = function (){
+            axios({
+                method:"post",
+                url:"http://localhost:8080/baseWebApp/addEmpAxiosServlet",
+                data:formData
+            }).then(function (response){
+                console.log("这是我执行的异步get方法，并在回调时输出的话。");
+                let result = response.data;
+                if (result === "success"){
+                    document.getElementById("msg_result").style.display="block";
+                }
+            })
+        }
+    </script>
+    
+</body>
+</html>

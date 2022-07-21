@@ -24,7 +24,6 @@ public class EmpServiceImpl implements EmpService {
     public List<Emp> selectAll() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
-
         List<Emp> emps = mapper.selectAll();
         sqlSession.close();
         return emps;

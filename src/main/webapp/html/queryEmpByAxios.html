@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AxiosUtilsQuery</title>
+</head>
+<body>
+<input type="button" onclick='location.href=("/baseWebApp/addEmp.jsp")' value="add"/>
+<br>
+<hr>
+<table id="empsTable" border="1" cellspacing="0" width="1200">
+</table>
+<br>
+<hr/>
+
+<script src="../js/axios.min.js"></script>
+<script>
+    /*当页面加载完成后发出ajax请求*/
+    window.onload = function () {
+        axios({
+            method: "get",
+            url: "http://localhost:8080/baseWebApp/listEmpAxiosServlet"
+        }).then(function (resp) {
+            console.log("这是我执行的异步get方法，并在回调时输出的话。")
+            let emps = resp.data;
+            let tableData = "<tr align=\"center\">\n" +
+                "            <th>id</th>\n" +
+                "            <th>name</th>\n" +
+                "            <th>age</th>\n" +
+                "            <th>job</th>\n" +
+                "            <th>salary</th>\n" +
+                "            <th>entryDate</th>\n" +
+                "            <th>manageId</th>\n" +
+                "            <th>deptId</th>\n" +
+                "            <th>UPDATE</th>\n" +
+                "            <th>DELETE</th>\n" +
+                "        </tr>";
+            for (let i = 0; i < emps.length; i++) {
+                let emp = emps[i];
+                tableData += "<tr align=\"center\">\n" +
+                    "            <td>"+(i+1)+"</td>\n" +
+                    "            <td>"+emp.name+"</td>\n" +
+                    "            <td>"+emp.age+"</td>\n" +
+                    "            <td>"+emp.job+"</td>\n" +
+                    "            <td>"+emp.salary+"</td>\n" +
+                    "            <td>"+emp.entryDate+"</td>\n" +
+                    "            <td>"+emp.manageId+"</td>\n" +
+                    "            <td>"+emp.deptId+"</td>\n" +
+                    "            <td>\n" +
+                    "              <input type=\"button\" onclick='location.href=(\"/baseWebApp/empSelectById?id=${emp.id}\")' value=\"update\"/>\n" +
+                    "            </td>\n" +
+                    "            <td>\n" +
+                    "              <input type=\"button\" onclick='location.href=(\"/baseWebApp/empRemoveById?id=${emp.id}\")' value=\"delete\"/>\n" +
+                    "            </td>" +
+                    "        </tr>";
+                /*设置表格数据*/
+                document.getElementById("empsTable").innerHTML = tableData;
+            }
+        })
+    }
+</script>
+</body>
+</html>
