@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AxiosUtilsQuery</title>
+</head>
+    <body>
+        <div id="app">
+            <input type="button" onclick='location.href=("/baseWebApp/html/addEmpByVue.html")' value="add"/>
+            <hr>
+            <br>
+            <table border="1" cellspacing="0" width="1300">
+                <!--表头不变-->
+                <tr align="center">
+                    <th>id</th>
+                    <th>name</th>
+                    <th>age</th>
+                    <th>job</th>
+                    <th>salary</th>
+                    <th>entryDate</th>
+                    <th>manageId</th>
+                    <th>deptId</th>
+                    <th>UPDATE</th>
+                    <th>DELETE</th>
+                </tr>
+                <!--表内容用vue的v-for进行遍历-->
+                <!--todo 数据未回显出来，但后台已传入-->
+                <tr v-for="(emp,i) in emps" align="center">
+                    <td>{{i+1}}</td>
+                    <td>{{emp.name}}</td>
+                    <td>{{emp.age}}</td>
+                    <td>{{emp.job}}</td>
+                    <td>{{emp.salary}}</td>
+                    <td>{{emp.entryDate}}</td>
+                    <td>{{emp.manageId}}</td>
+                    <td>{{emp.deptId}}</td>
+                    <td>
+                        <input type="button" onclick='location.href=("/baseWebApp/empSelectById?id="+/{{emp.id}}/)' value="update"/>
+                    </td>
+                    <td>
+                        <input type="button" onclick='location.href=("/baseWebApp/empRemoveById?id="+/{{emp.id}}/)' value="delete"/>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <hr/>
+        </div>
+
+        <script src="../js/axios.min.js"></script>
+        <script src="../js/vue.js"></script>
+        <script>
+            new Vue({
+                el: "#app",
+                data(){
+                    //模型对象们
+                    return{
+                        emps:[]
+                    }
+                },
+                mounted(){
+                    const _this = this;
+                    //页面渲染完成后的异步请求操作
+                    axios({
+                        method: "get",
+                        url: "http://localhost:8080/baseWebApp/listEmpAxiosServlet"
+                    }).then(function (resp) {
+                        _this.emps = resp.data;
+                    })
+                }
+            });
+        </script>
+    </body>
+</html>

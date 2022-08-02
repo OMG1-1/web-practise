@@ -24,7 +24,6 @@ public class EmpServiceImpl implements EmpService {
     public List<Emp> selectAll() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
-
         List<Emp> emps = mapper.selectAll();
         sqlSession.close();
         return emps;
@@ -43,16 +42,10 @@ public class EmpServiceImpl implements EmpService {
     public String addOne(Emp emp) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
-        int i = mapper.selectWithName(emp.getName());
-        if (i == 0) {
-            mapper.insertOne(emp);
-            sqlSession.commit();
-            sqlSession.close();
-            return "success";
-        } else {
-            sqlSession.close();
-            return "had same name records, failed!";
-        }
+        mapper.insertOne(emp);
+        sqlSession.commit();
+        sqlSession.close();
+        return "success";
     }
 
     @Override

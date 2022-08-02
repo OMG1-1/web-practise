@@ -22,7 +22,7 @@ public class QueryByIdEmpServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Emp byId = service.selectById(Integer.parseInt(request.getParameter("id")));
         request.setAttribute("byId",byId);
-        request.getRequestDispatcher("/modifyEmp.jsp").forward(request,response);
+        request.getRequestDispatcher("/jsp/modifyEmp.jsp").forward(request,response);
     }
 
     @Override

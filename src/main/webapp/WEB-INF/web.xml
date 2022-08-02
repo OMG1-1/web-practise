@@ -6,6 +6,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>Archetype Created Web Application</display-name>
+    <!--用XML方式配置servlet访问路径映射-->
     <servlet>
         <servlet-name>QueryListEmpServlet</servlet-name>
         <servlet-class>com.kobe.web.QueryListEmpServlet</servlet-class>

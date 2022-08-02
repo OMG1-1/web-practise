@@ -23,7 +23,7 @@ public class RemoveByIdServlet extends HttpServlet {
         String result = service.deleteById(Integer.parseInt(request.getParameter("id")));
         request.setAttribute("result", result);
         System.out.println(result);
-        request.getRequestDispatcher("/resultEmpOptional.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/resultEmpOptional.jsp").forward(request, response);
     }
 
     @Override
