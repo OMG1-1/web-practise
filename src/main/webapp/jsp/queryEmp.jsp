@@ -15,7 +15,7 @@
     <title>selectEmpAllDataSet</title>
 </head>
 <body>
-<input type="button" onclick='location.href=("/baseWebApp/addEmp.jsp")' value="add"/>
+<input type="button" onclick='location.href=("/baseWebApp/jsp/addEmp.jsp")' value="add"/>
 <br>
 <hr>
 <table border="1" cellspacing="0" width="1200">

@@ -34,7 +34,7 @@ public interface EmpMapper {
     /**
      * 向Emp表插入一条数据
      */
-    @Insert("insert into emp values (null,#{name},#{age},#{job},#{salary},#{entryDate},#{manageId},#{deptId}))")
+    @Insert("insert into emp values (null,#{name},#{age},#{job},#{salary},#{entryDate},#{manageId},#{deptId})")
     void insertOne(Emp emp);
 
     /**

@@ -36,44 +36,46 @@
         <span></span>
         <button type="reset">reset</button>
     </form>
-    <br/>
     <hr/>
-    <span id="msg_result" style="display: none">添加成功!</span>
+    <span id="msg_result" style="display: none">添加失败!</span>
     <script src="../js/axios.min.js"></script>
     <script>
-        var formData={
-            name:"",
-            age:"",
-            job:"",
-            salary:"",
-            entryDate:"",
-            manageId:"",
-            deptId:""
-        };
-        // 获取用户输入数据
-        formData.name = document.getElementById("name").value;
-        formData.age = document.getElementById("age").value;
-        formData.job = document.getElementById("job").value;
-        formData.salary = document.getElementById("salary").value;
-        formData.entryDate = document.getElementById("entryDate").value;
-        formData.manageId = document.getElementById("manageId").value;
-        formData.deptId = document.getElementById("deptId").value;
-
         // 提交表单事件触发条件
         document.getElementById("submit").onclick = function (){
+            // 01. 表单数据存入对象
+            var formData = {
+                name:"",
+                age:"",
+                job:"",
+                salary:"",
+                entryDate:"",
+                manageId:"",
+                deptId:""
+            };
+            // 获取用户输入数据
+            formData.name = document.getElementById("name").value;
+            formData.age = document.getElementById("age").value;
+            formData.job = document.getElementById("job").value;
+            formData.salary = document.getElementById("salary").value;
+            formData.entryDate = document.getElementById("entryDate").value;
+            formData.manageId = document.getElementById("manageId").value;
+            formData.deptId = document.getElementById("deptId").value;
+            console.log(formData);
+
+            // 02. 发送异步请求
             axios({
                 method:"post",
                 url:"http://localhost:8080/baseWebApp/addEmpAxiosServlet",
                 data:formData
-            }).then(function (response){
-                console.log("这是我执行的异步get方法，并在回调时输出的话。");
-                let result = response.data;
-                if (result === "success"){
-                    document.getElementById("msg_result").style.display="block";
+            }).then(function (resp) {
+                /*todo 跳转不了界面*/
+                if (resp.data == "success") {
+                    location.href = "http://localhost:8080/baseWebApp/html/QueryEmpByAxios.html";
+                } else {
+                    alert(resp.data);
                 }
             })
         }
     </script>
-    
 </body>
 </html>
