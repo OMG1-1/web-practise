@@ -24,7 +24,8 @@ public class Emp {
     private String job;
 
     private int salary;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date entryDate;
 

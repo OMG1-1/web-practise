@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSON;
 import com.kobe.pojo.Emp;
 import com.kobe.service.impl.EmpServiceImpl;
 
-import javax.jws.WebService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +27,7 @@ public class QueryListEmpByAxiosServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Emp> empList = service.selectAll();
+
         // 序列化
         String s = JSON.toJSONString(empList);
         System.out.println("s = " + s);
