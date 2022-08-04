@@ -61,22 +61,11 @@
 
                     <!--数据处理行-->
                     <el-row style="margin-top: 20px">
-                        <el-button type="primary" plain @click="dialogVisible2 = true">新增人员信息</el-button>
-                        <el-button type="danger" plain @click="dialogVisible1 = true">删除所有人员信息</el-button>
-                        <el-dialog
-                                title="警告"
-                                :visible.sync="dialogVisible1"
-                                width="30%"
-                                :before-close="handleClose">
-                            <span>是否删除所有数据，一旦删除数据将会丢失！</span>
-                            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible1 = false">取 消</el-button>
-                <el-button type="danger" @click="dialogVisible1 = false">确 定</el-button>
-            </span>
-                        </el-dialog>
+                        <el-button type="primary" plain @click="dialogVisible = true">新增人员信息</el-button>
+                        <el-button type="danger" plain @click="confirmBox">删除所有人员信息</el-button>
                         <el-dialog
                                 title="添加人员信息"
-                                :visible.sync="dialogVisible2"
+                                :visible.sync="dialogVisible"
                                 width="30%"
                                 :before-close="handleClose">
                             <el-form ref="form" :model="form" label-width="100px">
@@ -106,7 +95,7 @@
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="addEmp()">增加</el-button>
-                                    <el-button @click="dialogVisible2 = false">取消</el-button>
+                                    <el-button @click="dialogVisible = false">取消</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-dialog>
@@ -116,6 +105,7 @@
                     <el-table
                             :data="tableData"
                             border
+                            height="350"
                             ref="multipleTable"
                             @selection-change="handleSelectionChange"
                             style="width: 100%;margin-top: 20px">
@@ -169,8 +159,8 @@
                                 label="操作"
                                 width="150">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="modifyEmp()">编辑</el-button>
-                                <el-button type="text" size="small" @click="removeEmp()">删除</el-button>
+                                <el-button type="text" size="small" @click="modifyEmp(row)">编辑</el-button>
+                                <el-button type="text" size="small" @click="removeEmp(row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -180,10 +170,10 @@
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
                                 :current-page="currentPage"
-                                :page-sizes="[20, 40, 60, 80]"
-                                :page-size="20"
+                                :page-sizes="[5,10,15,20]"
+                                :page-size="pageSize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="1000">
+                                :total="totalCount">
                         </el-pagination>
                     </div>
 
@@ -205,17 +195,23 @@
 <script src="../js/vue.js"></script>
 <!-- 引入element组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
 <script>
     new Vue({
         el: "#app",
         methods: {
-            // 点击按钮
-            handleClick(row) {
+            // 点击修改按钮
+            modifyEmp(row) {
+                console.log(row);
+            },
+            // 点击删除按钮
+            removeEmp(row) {
                 console.log(row);
             },
             // 点击选择
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                this.ids.push(val.id);
             },
             // 多选方法
             toggleSelection(rows) {
@@ -237,37 +233,37 @@
                     });
             },
             // 异步请求方法
-            selectAllEmp() {
+            selectAll() {
                 axios({
                     method: "get",
-                    url: "http://localhost:8080/baseWebApp/listEmpAxiosServlet"
-                }).then(function (resp) {
-                    this.tableData = resp.data;
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond?currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
                 })
             },
             addEmp() {
-                const _this = this;
                 axios({
                     method: "post",
-                    url: "http://localhost:8080/baseWebApp/addEmpAxiosServlet",
-                    data: _this.emp
-                }).then(function (resp) {
+                    url: "http://localhost:8080/baseWebApp/emp/addOne",
+                    data: this.emp
+                }).then(resp => {
                     if (resp.data == "success") {
-                        _this.msg_success();
-                        _this.dialogVisible2 = false;
-                        _this.selectAllEmp();
+                        this.msg_success();
+                        this.dialogVisible = false;
+                        this.selectAll();
                     } else {
-                        _this.msg_error();
+                        this.msg_error();
                     }
                 })
             },
-            searchEmpList() {
+            removeIds() {
                 axios({
-                    method: "get",
-                    url: "http://localhost:8080/baseWebApp/listEmpAxiosServlet",
-                    data: _this.searchKeys
-                }).then(function (resp) {
-                    this.tableData = resp.data;
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/removeMultiple",
+                    data: this.ids
+                }).then(resp => {
+                    this.selectAll();
                 })
             },
             // 成功消息提示
@@ -283,25 +279,61 @@
             },
             // 分页方法
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                this.pageSize = val;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond？currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                    data: this.emp
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
+                })
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                this.currentPage = val;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond？currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                    data: this.emp
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
+                })
+            },
+            // 提示用户确认其已经触发的动作
+            confirmBox() {
+                this.$confirm('此操作将删除该条记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         data() {
             return {
-                dialogVisible1: false,
-                dialogVisible2: false,
+                dialogVisible: false,
                 currentPage: 1,
+                pageSize: 5,
+                totalCount: 100,
                 emp: {},
                 searchKeys: {},
                 tableData: [],
-                multipleSelection: []
+                multipleSelection: [],
+                ids: []
             }
         },
         mounted() { // 页面加载完成后发送异步请求查询所有
-            this.selectAllEmp()
+            this.selectAll()
         }
     })
 </script>

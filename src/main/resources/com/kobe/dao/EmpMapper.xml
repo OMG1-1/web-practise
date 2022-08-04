@@ -6,4 +6,35 @@
         <result column="entrydate" property="entryDate"/>
         <result column="manage_id" property="manageId"/>
     </resultMap>
+
+    <select id="selectByPageAndConditionsData" resultMap="emp">
+        select * from `emp`
+        <where>
+            <if test="emp.name != null and emp.name !=''">
+                and `name` like #{emp.name}
+            </if>
+            <if test="emp.manageId != null and emp.name !=''">
+                and `manage_id` = #{emp.manageId}
+            </if>
+            <if test="emp.deptId != null and emp.name !=''">
+                and `dept_id` = #{emp.deptId}
+            </if>
+        </where>
+        limit #{pageStartIndex},#{pageSize}
+    </select>
+
+    <select id="selectByPageAndConditionsCount" resultType="java.lang.Integer">
+        select count(*) from `emp`
+        <where>
+            <if test="emp.name != null and emp.name !=''">
+                and `name` like #{emp.name}
+            </if>
+            <if test="emp.manageId != null and emp.name !=''">
+                and `manage_id` = #{emp.manageId}
+            </if>
+            <if test="emp.deptId != null and emp.name !=''">
+                and `dept_id` = #{emp.deptId}
+            </if>
+        </where>
+    </select>
 </mapper>

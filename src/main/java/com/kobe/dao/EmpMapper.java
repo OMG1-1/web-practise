@@ -63,4 +63,54 @@ public interface EmpMapper {
      */
     @Delete("delete from emp where id = ${id}")
     int deleteById(int id);
+
+    /**
+     * 批量删除
+     *
+     * @param ids int[] ids
+     */
+    @Delete("delete from emp where id in (${ids})")
+    int deleteByIds(int[] ids);
+
+
+    /**
+     * 根据条件查询记录 动态
+     *
+     * @param pageStartIndex 起始页码
+     * @param pageSize       页的大小
+     * @param emp            实体对象
+     * @return 符合条件记录
+     */
+    List<Emp> selectByPageAndConditionsData(@Param("pageStartIndex") int pageStartIndex, @Param("pageSize") int pageSize, @Param("emp") Emp emp);
+
+
+    /**
+     * 根据条件查询记录数 动态
+     *
+     * @param pageStartIndex 起始页码
+     * @param pageSize       页的大小
+     * @param emp            实体对象
+     * @return 符合条件记录数
+     */
+    int selectByPageAndConditionsCount(@Param("pageStartIndex") int pageStartIndex, @Param("pageSize") int pageSize, @Param("emp") Emp emp);
+
+    /**
+     * 根据页设置查询记录 动态
+     *
+     * @param pageStartIndex 起始页码
+     * @param pageSize       页的大小
+     * @return 符合条件记录
+     */
+    @Select("select * from emp limit ${pageStartIndex},${pageSize}")
+    List<Emp> selectByPageData(@Param("pageStartIndex") int pageStartIndex, @Param("pageSize") int pageSize);
+
+
+    /**
+     * 根据页设置查询记录数 动态
+     *
+     * @return 符合条件记录数
+     */
+    @Select("select count(*) from emp")
+    int selectByPageCount();
+
 }
