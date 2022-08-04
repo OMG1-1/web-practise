@@ -1,6 +1,7 @@
 package com.kobe.service;
 
 import com.kobe.pojo.Emp;
+import com.kobe.pojo.PageBean;
 
 import java.util.List;
 
@@ -51,4 +52,23 @@ public interface EmpService {
      * @return string
      */
     String deleteById(int id);
+
+    /**
+     * 根据id删除数据
+     *
+     * @param ids int[] ids
+     * @return string
+     */
+    String deleteByIds(int[] ids);
+
+    /**
+     * 根据页面设置与查询条件动态获取表中数据
+     *
+     * @param currentPage 当前页码
+     * @param pageSize 目前页的大小
+     * @param emp 实体对象
+     * @return 页面数据存储对象
+     */
+    PageBean<Emp> getPageAndConditionsData(int currentPage, int pageSize, Emp emp);
+
 }

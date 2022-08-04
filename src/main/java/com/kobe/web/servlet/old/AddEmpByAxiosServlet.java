@@ -1,4 +1,4 @@
-package com.kobe.web;
+package com.kobe.web.servlet.old;
 
 import com.alibaba.fastjson.JSON;
 import com.kobe.pojo.Emp;
@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
