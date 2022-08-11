@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AxiosUtilsAdd</title>
+    <style type="text/css">
+        span{
+            width: 100px;
+        }
+    </style>
+</head>
+    <body>
+        <div id="app">
+            <form action="" method="post">
+                <!--01. 绑定数据存入模型-->
+                <label>name:</label><span></span>
+                <input name="name" v-model="emp.name">
+                <br>
+                <label>age:</label><span></span>
+                <input name="age" v-model="emp.age">
+                <br>
+                <label>job:</label><span></span>
+                <input name="job" v-model="emp.job">
+                <br>
+                <label>salary:</label><span></span>
+                <input name="salary" v-model="emp.salary">
+                <br>
+                <label>entryDate:</label><span></span>
+                <input type="date" name="entryDate" v-model="emp.entryDate"/>
+                <br>
+                <label>manageId:</label><span></span>
+                <input name="manageId" v-model="emp.manageId">
+                <br>
+                <label>deptId:</label><span></span>
+                <input name="deptId" v-model="emp.deptId">
+                <br>
+                <button id="submit" @click="submitForm">commit</button>
+                <span></span>
+                <button type="reset">reset</button>
+            </form>
+            <hr/>
+        </div>
+
+        <script src="../js/axios.min.js"></script>
+        <script src="../js/vue.js"></script>
+        <script>
+            // vue简化表单提交时数据绑定
+            new Vue({
+                el: "#app",
+                data(){
+                    return{
+                        emp:{}
+                    }
+                },
+                methods:{
+                    /*todo 数据未发送成功，原因不明*/
+                    submitForm(){
+                        var _this = this;
+                        // 02. 发送异步请求
+                        axios({
+                            method:"post",
+                            url:"http://localhost:8080/baseWebApp/addEmpAxiosServlet",
+                            data:_this.emp
+                        }).then(function (resp) {
+                            if (resp.data == "success") { location.href = "http://localhost:8080/baseWebApp/html/QueryEmpByAxios.html";
+                            } else { alert(resp.data); }
+                        })
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

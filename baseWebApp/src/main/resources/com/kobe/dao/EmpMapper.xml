@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kobe.dao.EmpMapper">
+    <resultMap id="emp" type="com.kobe.pojo.Emp">
+        <result column="dept_id" property="deptId"/>
+        <result column="entrydate" property="entryDate"/>
+        <result column="manage_id" property="manageId"/>
+    </resultMap>
+
+    <select id="selectByPageAndConditionsData" resultMap="emp">
+        select * from `emp`
+        <where>
+            <if test="emp.name != null and emp.name !=''">
+                and `name` like #{emp.name}
+            </if>
+            <if test="emp.manageId != null and emp.name !=''">
+                and `manage_id` = #{emp.manageId}
+            </if>
+            <if test="emp.deptId != null and emp.name !=''">
+                and `dept_id` = #{emp.deptId}
+            </if>
+        </where>
+        limit #{pageStartIndex},#{pageSize}
+    </select>
+
+    <select id="selectByPageAndConditionsCount" resultType="java.lang.Integer">
+        select count(*) from `emp`
+        <where>
+            <if test="emp.name != null and emp.name !=''">
+                and `name` like #{emp.name}
+            </if>
+            <if test="emp.manageId != null and emp.name !=''">
+                and `manage_id` = #{emp.manageId}
+            </if>
+            <if test="emp.deptId != null and emp.name !=''">
+                and `dept_id` = #{emp.deptId}
+            </if>
+        </where>
+    </select>
+</mapper>

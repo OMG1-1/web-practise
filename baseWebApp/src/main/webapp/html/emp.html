@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>最基础的Web开发综合练习</title>
+    <!-- 引入element样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <!--页头-->
+        <el-header>
+            <h1 style="color:#409EFF">部门信息操作页面，哈塞给！</h1>
+            <hr>
+        </el-header>
+        <el-container>
+            <el-aside width="30%">
+                <el-calendar style="margin-top: 20px">
+                    <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+                    <template
+                            slot="dateCell"
+                            slot-scope="{date, data}">
+                        <p :class="data.isSelected ? 'is-selected' : ''">
+                            {{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}
+                        </p>
+                    </template>
+                </el-calendar>
+                <style>
+                    .is-selected {
+                        color: #1989FA;
+                    }
+                </style>
+            </el-aside>
+            <el-container>
+                <el-main>
+                    <!--数据查询条件设置行-->
+                    <el-row style="margin-top: 20px">
+                        <div class="input-suffix">
+                            <span class="demonstration">输入姓名关键字：</span>
+                            <el-input style="width: 12%;margin-right: 25px"
+                                      placeholder="请输入姓名"
+                                      prefix-icon="el-icon-search"
+                                      v-model="searchKeys.name">
+                            </el-input>
+                            <span class="demonstration">输入部门名称：</span>
+                            <el-input style="width: 12%;margin-right: 25px"
+                                      placeholder="请输入部门名称"
+                                      prefix-icon="el-icon-search"
+                                      v-model="searchKeys.deptId">
+                            </el-input>
+                            <span class="demonstration">输入领导人姓名关键字：</span>
+                            <el-input style="width: 12%;margin-right: 25px"
+                                      placeholder="请输入领导人名称"
+                                      prefix-icon="el-icon-search"
+                                      v-model="searchKeys.manageId">
+                            </el-input>
+                            <el-button type="primary" icon="el-icon-search" @click="searchEmpList()">搜索</el-button>
+                        </div>
+                    </el-row>
+
+                    <!--数据处理行-->
+                    <el-row style="margin-top: 20px">
+                        <el-button type="primary" plain @click="dialogVisible = true">新增人员信息</el-button>
+                        <el-button type="danger" plain @click="confirmBox">删除所有人员信息</el-button>
+                        <el-dialog
+                                title="添加人员信息"
+                                :visible.sync="dialogVisible"
+                                width="30%"
+                                :before-close="handleClose">
+                            <el-form ref="form" :model="form" label-width="100px">
+                                <el-form-item label="姓名">
+                                    <el-input v-model="emp.name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="年龄">
+                                    <el-input v-model="emp.age"></el-input>
+                                </el-form-item>
+                                <el-form-item label="职位">
+                                    <el-input v-model="emp.job"></el-input>
+                                </el-form-item>
+                                <el-form-item label="薪资">
+                                    <el-input v-model="emp.salary"></el-input>
+                                </el-form-item>
+                                <el-form-item label="入职时间">
+                                    <el-col :span="11">
+                                        <el-date-picker type="date" placeholder="选择日期" v-model="emp.entryDate"
+                                                        style="width: 100%;"></el-date-picker>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="管理人编号">
+                                    <el-input v-model="emp.manageId"></el-input>
+                                </el-form-item>
+                                <el-form-item label="部门编号">
+                                    <el-input v-model="emp.deptId"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @click="addEmp()">增加</el-button>
+                                    <el-button @click="dialogVisible = false">取消</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-dialog>
+                    </el-row>
+
+                    <!--数据展现表格-->
+                    <el-table
+                            :data="tableData"
+                            border
+                            height="350"
+                            ref="multipleTable"
+                            @selection-change="handleSelectionChange"
+                            style="width: 100%;margin-top: 20px">
+                        <el-table-column
+                                fixed
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column
+                                prop="id"
+                                label="序号"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="name"
+                                label="姓名"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="age"
+                                label="年龄"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="job"
+                                label="职位"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="salary"
+                                label="薪资"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="entryDate"
+                                label="入职日期"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="manageId"
+                                label="管理者编号"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="deptId"
+                                label="部门编号"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="150">
+                            <template slot-scope="scope">
+                                <el-button type="text" size="small" @click="modifyEmp(row)">编辑</el-button>
+                                <el-button type="text" size="small" @click="removeEmp(row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!--分页展示设置与跳转-->
+                    <div class="block" style="margin-top: 20px">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currentPage"
+                                :page-sizes="[5,10,15,20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="totalCount">
+                        </el-pagination>
+                    </div>
+
+                    <!--取消已选数据行-->
+                    <div style="margin-top: 20px">
+                        <el-button @click="toggleSelection()">取消选择</el-button>
+                    </div>
+                </el-main>
+                <el-footer>
+
+                </el-footer>
+            </el-container>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script src="../js/axios.min.js"></script>
+<script src="../js/vue.js"></script>
+<!-- 引入element组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        methods: {
+            // 点击修改按钮
+            modifyEmp(row) {
+                console.log(row);
+            },
+            // 点击删除按钮
+            removeEmp(row) {
+                console.log(row);
+            },
+            // 点击选择
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                this.ids.push(val.id);
+            },
+            // 多选方法
+            toggleSelection(rows) {
+                if (rows) {
+                    rows.forEach(row => {
+                        this.$refs.multipleTable.toggleRowSelection(row);
+                    });
+                } else {
+                    this.$refs.multipleTable.clearSelection();
+                }
+            },
+            // 弹出对话框的关闭按钮方法
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+            // 异步请求方法
+            selectAll() {
+                axios({
+                    method: "get",
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond?currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
+                })
+            },
+            addEmp() {
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/addOne",
+                    data: this.emp
+                }).then(resp => {
+                    if (resp.data == "success") {
+                        this.msg_success();
+                        this.dialogVisible = false;
+                        this.selectAll();
+                    } else {
+                        this.msg_error();
+                    }
+                })
+            },
+            removeIds() {
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/removeMultiple",
+                    data: this.ids
+                }).then(resp => {
+                    this.selectAll();
+                })
+            },
+            // 成功消息提示
+            msg_success() {
+                this.$message({
+                    message: '添加成功',
+                    type: 'success'
+                });
+            },
+            // 错误消息提示
+            msg_error() {
+                this.$message.error('添加失败');
+            },
+            // 分页方法
+            handleSizeChange(val) {
+                this.pageSize = val;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond？currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                    data: this.emp
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
+                })
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/baseWebApp/emp/getRecordsByCond？currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+                    data: this.emp
+                }).then(resp => {
+                    this.tableData = resp.data.pageData;
+                    this.totalCount = resp.data.countData;
+                })
+            },
+            // 提示用户确认其已经触发的动作
+            confirmBox() {
+                this.$confirm('此操作将删除该条记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        },
+        data() {
+            return {
+                dialogVisible: false,
+                currentPage: 1,
+                pageSize: 5,
+                totalCount: 100,
+                emp: {},
+                searchKeys: {},
+                tableData: [],
+                multipleSelection: [],
+                ids: []
+            }
+        },
+        mounted() { // 页面加载完成后发送异步请求查询所有
+            this.selectAll()
+        }
+    })
+</script>
+</body>
+</html>
