@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kobe</groupId>
-    <artifactId>baseMvc</artifactId>
+    <artifactId>baseWebApp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 

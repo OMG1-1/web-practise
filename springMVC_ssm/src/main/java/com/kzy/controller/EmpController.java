@@ -1,11 +1,13 @@
 package com.kzy.controller;
 
+import com.kzy.common.CommonConstant;
 import com.kzy.domain.Emp;
 import com.kzy.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,8 +30,9 @@ public class EmpController {
      * @return boolean
      */
     @PostMapping()
-    public boolean save(@RequestBody Emp emp) {
-        return empService.save(emp);
+    public Result save(@RequestBody Emp emp) {
+        boolean flag = empService.save(emp);
+        return new Result(flag ? CommonConstant.SAVE_OK : CommonConstant.SAVE_ERR, String.valueOf(flag));
     }
 
     /**
@@ -39,8 +42,9 @@ public class EmpController {
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable("id") Integer id) {
-        return empService.delete(id);
+    public Result delete(@PathVariable("id") Integer id) {
+        boolean flag = empService.delete(id);
+        return new Result(flag ? CommonConstant.DELETE_OK : CommonConstant.DELETE_ERR, String.valueOf(flag));
     }
 
     /**
@@ -50,8 +54,9 @@ public class EmpController {
      * @return boolean
      */
     @PutMapping()
-    public boolean update(@RequestBody Emp emp) {
-        return empService.update(emp);
+    public Result update(@RequestBody Emp emp) {
+        boolean flag = empService.update(emp);
+        return new Result(flag ? CommonConstant.UPDATE_OK : CommonConstant.UPDATE_ERR, String.valueOf(flag));
     }
 
     /**
@@ -60,8 +65,14 @@ public class EmpController {
      * @return emp对象列表
      */
     @GetMapping()
-    public List<Emp> getAll() {
-        return empService.getAll();
+    public Result getAll() {
+        List<Emp> data = empService.getAll();
+        int code = CommonConstant.GET_ERR;
+        String msg = "查询失败，请稍后重新查询！";
+        if ((null != data) && !"".equals(data.toString())) {
+            msg = "查询成功！";
+        }
+        return new Result(data, code, msg);
     }
 
     /**
@@ -71,7 +82,13 @@ public class EmpController {
      * @return emp对象
      */
     @GetMapping("/{id}")
-    public Emp getById(@PathVariable Integer id) {
-        return empService.getById(id);
+    public Result getById(@PathVariable Integer id) {
+        Emp data = empService.getById(id);
+        int code = CommonConstant.GET_ERR;
+        String msg = "查询失败，请检查查询的id是否存在！";
+        if ((null != data) && !"".equals(data.toString())) {
+            msg = "查询成功！";
+        }
+        return new Result(data, code, msg);
     }
 }
