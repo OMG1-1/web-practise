@@ -2,6 +2,7 @@ package com.kzy.controller;
 
 import com.kzy.common.CommonConstant;
 import com.kzy.domain.Emp;
+import com.kzy.exception.BusinessException;
 import com.kzy.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +72,7 @@ public class EmpController {
         String msg = "查询失败，请稍后重新查询！";
         if ((null != data) && !"".equals(data.toString())) {
             msg = "查询成功！";
+            code = CommonConstant.GET_OK;
         }
         return new Result(data, code, msg);
     }
@@ -88,6 +90,25 @@ public class EmpController {
         String msg = "查询失败，请检查查询的id是否存在！";
         if ((null != data) && !"".equals(data.toString())) {
             msg = "查询成功！";
+            code = CommonConstant.GET_OK;
+        }
+        return new Result(data, code, msg);
+    }
+
+    /**
+     * 获取emp表中数据（按照id精准查找、错误异常测试方法）
+     * 示例：<a href="http://localhost:8080/ssm/emp/errortest/-1">...</a>
+     * @param id id
+     * @return emp对象
+     */
+    @GetMapping("/errortest/{id}")
+    public Result getByIdTestError(@PathVariable Integer id) {
+        Emp data = empService.getByIdTestError(id);
+        int code = CommonConstant.GET_ERR;
+        String msg = "查询失败，请检查查询的id是否存在！";
+        if ((null != data) && !"".equals(data.toString())) {
+            msg = "查询成功！";
+            code = CommonConstant.GET_OK;
         }
         return new Result(data, code, msg);
     }

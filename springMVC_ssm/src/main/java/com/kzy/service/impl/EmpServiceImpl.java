@@ -1,7 +1,9 @@
 package com.kzy.service.impl;
 
+import com.kzy.common.CommonConstant;
 import com.kzy.dao.EmpDao;
 import com.kzy.domain.Emp;
+import com.kzy.exception.BusinessException;
 import com.kzy.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,15 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public Emp getById(Integer id) {
+        return empDao.getById(id);
+    }
+
+    @Override
+    public Emp getByIdTestError(Integer id) {
+        // 自定义业务异常触发
+        if(id < 0){
+            throw new BusinessException(CommonConstant.PROJECT_BUSINESS_ERR,"非法参数操作！");
+        }
         return empDao.getById(id);
     }
 }

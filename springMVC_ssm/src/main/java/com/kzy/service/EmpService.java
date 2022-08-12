@@ -58,4 +58,12 @@ public interface EmpService {
      * @return emp对象
      */
     Emp getById(Integer id);
+
+    /**
+     * 获取emp表中数据（按照id精准查找、错误异常测试方法）
+     *
+     * @param id id
+     * @return emp对象
+     */
+    Emp getByIdTestError(Integer id);
 }
